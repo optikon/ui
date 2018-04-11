@@ -1,15 +1,11 @@
-FROM mkenney/npm:7.0-alpine
+FROM mhart/alpine-node:8
 
 MAINTAINER Megan O'Keefe meokeefe@cisco.com
 
-RUN mkdir -p /ui
-WORKDIR /ui
-
 ADD . .
 
+RUN npm uninstall -g gulp && npm install -g gulp
 RUN npm install
-RUN npm rebuild node-sass
-
-EXPOSE 8000
+RUN npm rebuild node-sass --force
 
 CMD ["npm", "run", "start"]
