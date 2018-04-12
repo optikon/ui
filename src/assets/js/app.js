@@ -20,7 +20,7 @@ function init() {
   populateTables()
 }
 
-// we want to periodically update cluster + charts without having to refresh the page
+//  periodically update cluster + charts without having to refresh the page
 // TODO - also update map periodically
 function updateUI() {
   // updateClusterTable()
@@ -41,17 +41,17 @@ function populateTables() {
 
 
 function updateClusterTable() {
-  $.get("http://127.0.0.1:9000/v0/clusters",
+  $.get("http://127.0.0.1:30900/v0/clusters",
     function(data) {
       data.forEach(function(c) {
-        var newrow = '<tr><td>' + c.metadata.name + '</td><td>' + JSON.stringify(c.metadata.annotations) + '</td></tr>'
+        var newrow = '<tr><td>' + c.metadata.name + '</td><td>' + JSON.stringify(c.metadata.labels) + '</td><td>' + '<span class="badge success">✔</span>' + '</td><td>' + c.metadata.annotations.NumPods +  '</td></tr>'
         $('#clustable tr:last').after(newrow);
       });
     })
 }
 
 function updateChartsTable() {
-  $.get("http://127.0.0.1:9000/v0/charts",
+  $.get("http://127.0.0.1:30900/v0/releases",
     function(data) {
       data.forEach(function(x) {
         var newrow = '<tr><td>' + x.Metadata.Name + '</td><td>' + "cluster A, cluster B" + '</td><td>' + "great" + '</td></tr>'
@@ -77,7 +77,7 @@ $("#installChart").click(function() {
   // TODO
   // When I pass any kind of payload  / stringified version of chart, I get a "415 - Unsupported media type"
   $.post(
-    "http://127.0.0.1:9000/v0/charts", {},
+    "http://127.0.0.1:30900/v0/charts", {},
     function(data) {
       alert(data)
     },
