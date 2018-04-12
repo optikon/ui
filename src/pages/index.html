@@ -54,7 +54,7 @@
     <div class="grid-x grid-margin-x">
       <div class="large-12 cell">
         <p></p>
-        <h1 class="text-center">optikon ⎈ kubecon europe</h1>
+        <h1 class="text-center">Optikon ⎈ KubeCon Europe</h1>
       </div>
     </div>
   </div>
@@ -80,7 +80,7 @@
         <div class="large-6 medium-8 cell">
 
           <div class="callout">
-            <h3>edge clusters</h3>
+            <h3>Edge Clusters</h3>
             <table id="clustable">
               <thead>
                 <tr>
@@ -105,13 +105,19 @@
         <div class="large-6 medium-4 cell">
 
           <div class="callout">
-            <h3>install chart</h3>
+            <h3>Install Chart</h3>
             <!-- INSTALL RELEASE SECTION  -->
             <form>
               <div class="grid-x grid-margin-x">
                 <div class="large-12 cell">
-                  <input type="text"  id="pathToChart" placeholder="/path/to/chart" />
-                    <input type="text"  id="labelList" placeholder="cluster-label1, cluster-label2" />
+                  <p>Upload .tar helm chart:</p>
+                  <input name="chartLoc" id="chartLoc" type="file">
+                  <p>Release name:</p>
+                  <input type="text"  id="chartName" placeholder="my-awesome-app" />
+                  <p>Release namespace on each edge cluster:</p>
+                  <input type="text"  id="chartNamespace" placeholder="default" />
+                  <p>Cluster label selectors:</p>
+                  <input type="text"  id="chartLabels" placeholder="cluster-label1, cluster-label2" />
                   <div class="button-group">
                     <a class="success button" id="postRelease">Install</a>
                   </div>
@@ -123,7 +129,7 @@
 
             <!-- LIST RELEASE SECTION  -->
           <div class="callout">
-            <h3>releases</h3>
+            <h3>Releases</h3>
             <table id="releaseTable">
               <thead>
                 <tr>
@@ -140,7 +146,6 @@
 
 
             <!-- DELETE RELEASE SECTION  -->
-
             <form>
               <div class="grid-x grid-margin-x">
                 <div class="large-12 cell">

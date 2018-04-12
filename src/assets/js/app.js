@@ -11,9 +11,6 @@ import Foundation from 'foundation-sites';
 
 window.$ = $;
 window.onload = init;
-window.setInterval(function() {
-  // updateUI()
-}, 2000);
 $(document).foundation();
 
 function init() {
@@ -23,8 +20,8 @@ function init() {
 //  periodically update cluster + charts without having to refresh the page
 // TODO - also update map periodically
 function updateUI() {
-  // updateClusterTable()
-  // updateChartsTable()
+  updateClusterTable()
+  updateChartsTable()
 }
 
 
@@ -51,7 +48,6 @@ function updateClusterTable()  {
         $('#clustable tr:last').after(newrow);
       });
     })
-
 }
 
 
@@ -73,23 +69,21 @@ function updateChartsTable() {
 
 // TODO - determine the right data format (other than an empty object)
 $("#postRelease").click(function() {
-  var content = $('input#postInput').val();
-  var chart = {
-    Metadata: {
-      Name: content
-    }
-  }
+  var data = new FormData();
+      data.append("name", $('#chartName').val());
+      data.append("chartTar", document.getElementById("chartLoc").files[0]);
+      data.append("namespace", $('chartNamespace').val());
 
-  // TODO
-  // When I pass any kind of payload  / stringified version of chart, I get a "415 - Unsupported media type"
-  $.post(
-    "http://127.0.0.1:30900/v0/charts", {},
-    function(data) {
-      alert(data)
-    },
-    "json"
-  );
+  jQuery.ajax({
+      url: 'http://127.0.0.1:30900/v0/releases',
+      data: data,
+      cache: false,
+      contentType: false,
+      processData: false,
+      method: 'POST',
+      type: 'POST', // For jQuery < 1.9
+      success: function(data){
+          alert(data);
+      }
+  });
 });
-
-
-// TODO: button handler for delete/chart
