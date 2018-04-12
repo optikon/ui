@@ -7,8 +7,6 @@ import Foundation from 'foundation-sites';
 //                           Init
 // ------------------------------------------------------------------------------------------
 
-
-
 window.$ = $;
 window.onload = init;
 $(document).foundation();
@@ -29,7 +27,6 @@ function updateUI() {
 //                          Tables
 // ------------------------------------------------------------------------------------------
 
-
 // Do an initial GEt clusters
 function populateTables() {
   updateClusterTable()
@@ -49,8 +46,6 @@ function updateClusterTable()  {
       });
     })
 }
-
-
 
 function updateChartsTable() {
   $.get("http://127.0.0.1:30900/v0/releases",
@@ -81,7 +76,7 @@ $("#postRelease").click(function() {
       contentType: false,
       processData: false,
       method: 'POST',
-      type: 'POST' 
+      type: 'POST'
   });
 });
 
