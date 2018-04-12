@@ -39,23 +39,29 @@ function populateTables() {
   updateChartsTable()
 }
 
+var AllClusters  = "";
 
-function updateClusterTable() {
+
+function updateClusterTable()  {
   $.get("http://127.0.0.1:30900/v0/clusters",
     function(data) {
       data.forEach(function(c) {
+        AllClusters += "  " + c.metadata.name
         var newrow = '<tr><td>' + c.metadata.name + '</td><td>' + JSON.stringify(c.metadata.labels) + '</td><td>' + '<span class="badge success">✔</span>' + '</td><td>' + c.metadata.annotations.NumPods +  '</td></tr>'
         $('#clustable tr:last').after(newrow);
       });
     })
+
 }
+
+
 
 function updateChartsTable() {
   $.get("http://127.0.0.1:30900/v0/releases",
     function(data) {
-      data.forEach(function(x) {
-        var newrow = '<tr><td>' + x.Metadata.Name + '</td><td>' + "cluster A, cluster B" + '</td><td>' + "great" + '</td></tr>'
-        $('#chartable tr:last').after(newrow);
+      data.forEach(function(r) {
+        var newrow = '<tr><td>' + r.Name + '</td><td>' + r.Version + '</td><td>'  + r.Chart.Template[0].Name + '</td><td>' + AllClusters +  '</td></tr>'
+        $('#releaseTable tr:last').after(newrow);
       });
     })
 }
@@ -66,7 +72,7 @@ function updateChartsTable() {
 // ------------------------------------------------------------------------------------------
 
 // TODO - determine the right data format (other than an empty object)
-$("#installChart").click(function() {
+$("#postRelease").click(function() {
   var content = $('input#postInput').val();
   var chart = {
     Metadata: {
