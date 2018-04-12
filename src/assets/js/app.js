@@ -7,24 +7,19 @@ import Foundation from 'foundation-sites';
 //                           Init
 // ------------------------------------------------------------------------------------------
 
-
-
 window.$ = $;
 window.onload = init;
-window.setInterval(function() {
-  // updateUI()
-}, 2000);
 $(document).foundation();
 
 function init() {
   populateTables()
 }
 
-// we want to periodically update cluster + charts without having to refresh the page
+//  periodically update cluster + charts without having to refresh the page
 // TODO - also update map periodically
 function updateUI() {
-  // updateClusterTable()
-  // updateChartsTable()
+  updateClusterTable()
+  updateChartsTable()
 }
 
 
@@ -32,30 +27,32 @@ function updateUI() {
 //                          Tables
 // ------------------------------------------------------------------------------------------
 
-
 // Do an initial GEt clusters
 function populateTables() {
   updateClusterTable()
   updateChartsTable()
 }
 
+var AllClusters  = "";
 
-function updateClusterTable() {
-  $.get("http://127.0.0.1:9000/v0/clusters",
+
+function updateClusterTable()  {
+  $.get("http://127.0.0.1:30900/v0/clusters",
     function(data) {
       data.forEach(function(c) {
-        var newrow = '<tr><td>' + c.metadata.name + '</td><td>' + JSON.stringify(c.metadata.annotations) + '</td></tr>'
+        AllClusters += "  " + c.metadata.name
+        var newrow = '<tr><td>' + c.metadata.name + '</td><td>' + JSON.stringify(c.metadata.labels) + '</td><td>' + '<span class="badge success">✔</span>' + '</td><td>' + c.metadata.annotations.NumPods +  '</td></tr>'
         $('#clustable tr:last').after(newrow);
       });
     })
 }
 
 function updateChartsTable() {
-  $.get("http://127.0.0.1:9000/v0/charts",
+  $.get("http://127.0.0.1:30900/v0/releases",
     function(data) {
-      data.forEach(function(x) {
-        var newrow = '<tr><td>' + x.Metadata.Name + '</td><td>' + "cluster A, cluster B" + '</td><td>' + "great" + '</td></tr>'
-        $('#chartable tr:last').after(newrow);
+      data.forEach(function(r) {
+        var newrow = '<tr><td>' + r.Name + '</td><td>' + r.Version + '</td><td>'  + r.Chart.Metadata.Name + '</td><td>' + AllClusters +  '</td></tr>'
+        $('#releaseTable tr:last').after(newrow);
       });
     })
 }
@@ -66,24 +63,38 @@ function updateChartsTable() {
 // ------------------------------------------------------------------------------------------
 
 // TODO - determine the right data format (other than an empty object)
-$("#installChart").click(function() {
-  var content = $('input#postInput').val();
-  var chart = {
-    Metadata: {
-      Name: content
-    }
-  }
+$("#postRelease").click(function() {
+  var data = new FormData();
+      data.append("name", $('#chartName').val());
+      data.append("chartTar", document.getElementById("chartLoc").files[0]);
+      data.append("namespace", $('chartNamespace').val());
 
-  // TODO
-  // When I pass any kind of payload  / stringified version of chart, I get a "415 - Unsupported media type"
-  $.post(
-    "http://127.0.0.1:9000/v0/charts", {},
-    function(data) {
-      alert(data)
-    },
-    "json"
-  );
+  jQuery.ajax({
+      url: 'http://127.0.0.1:30900/v0/releases',
+      data: data,
+      cache: false,
+      contentType: false,
+      processData: false,
+      method: 'POST',
+      type: 'POST'
+  });
 });
 
 
-// TODO: button handler for delete/chart
+$("#updateRelease").click(function() {
+  var data = new FormData();
+  var name = $('#chartName').val()
+      data.append("name", name);
+      data.append("chartTar", document.getElementById("chartLoc").files[0]);
+      data.append("namespace", $('chartNamespace').val());
+
+  jQuery.ajax({
+      url: 'http://127.0.0.1:30900/v0/releases/'+name,
+      data: data,
+      cache: false,
+      contentType: false,
+      processData: false,
+      method: 'PUT',
+      type: 'PUT'
+  });
+});
