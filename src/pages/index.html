@@ -14,7 +14,7 @@
     var map;
 
     function initMap() {
-      $.get("http://127.0.0.1:30900/v0/clusters",
+      $.get("http://172.16.7.101:30900/v0/clusters",
         function(data) {
           var cent = {
             lat: parseFloat(data[0].metadata.annotations.Lat), //clusters must have Lat and Long metadata (string)
@@ -117,7 +117,7 @@
                   <p>Release namespace on each edge cluster:</p>
                   <input type="text"  id="chartNamespace" placeholder="default" />
                   <p>Cluster label selectors:</p>
-                  <input type="text"  id="chartLabels" placeholder="cluster-label1, cluster-label2" />
+                  <input type="text"  id="chartLabels" placeholder="Universe=Big,Galaxy=MilkyWay" />
                   <div class="button-group">
                     <a class="success button" id="postRelease">Install</a>
                     <a class="warning button" id="updateRelease">Update</a>
@@ -137,7 +137,7 @@
                   <th>Name</th>
                   <th>Version</th>
                   <th>Chart</th>
-                  <th>Clusters</th>
+                  <th>On Cluster</th>
                 </tr>
               </thead>
               <tbody>
