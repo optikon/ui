@@ -2,6 +2,7 @@
 <html>
 
 <head>
+  <title>Optikon for Edge</title>
   <style>
     #map {
       height: 500px;
@@ -136,7 +137,8 @@
                 <tr>
                   <th>Name</th>
                   <th>Version</th>
-                  <th>Chart</th>
+                  <th>Chart Name</th>
+                  <th>Chart Version</th>
                   <th>On Cluster</th>
                 </tr>
               </thead>
@@ -150,7 +152,9 @@
             <form>
               <div class="grid-x grid-margin-x">
                 <div class="large-12 cell">
-                  <input type="text" id="postInput" placeholder="release name to delete" />
+                  <input type="text" id="delInput" placeholder="release name to delete" />
+                  <p>Cluster label selectors:</p>
+                  <input type="text"  id="delChartLabels" placeholder="Planet=Jupiter" />
                   <div class="button-group">
                     <a class="alert button" id="deleteRelease">Delete</a>
                   </div>

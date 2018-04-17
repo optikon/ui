@@ -51,7 +51,7 @@ function updateReleasesTable() {
   $.get("http://172.16.7.101:30900/v0/releases",
     function(data) {
       data.forEach(function(r) {
-        var newrow = '<tr><td>' + r.Name + '</td><td>' + r.Version + '</td><td>'  + r.Chart.Metadata.Name + '</td><td>' + r.OnCluster +  '</td></tr>'
+        var newrow = '<tr><td>' + r.Name + '</td><td>' + r.Version + '</td><td>'  + r.Chart.Metadata.Name + '</td><td>' + r.Chart.Metadata.Version + '</td><td>' + r.OnCluster +  '</td></tr>'
         $('#releaseTable tr:last').after(newrow);
       });
     })
@@ -65,8 +65,8 @@ function updateReleasesTable() {
 $("#postRelease").click(function() {
   var data = new FormData();
     data.append("name", $('#chartName').val());
-    data.append("chartTar", document.getElementById("chartLoc").files[0]);      data.append("namespace", $('chartNamespace').val());
-
+    data.append("chartTar", document.getElementById("chartLoc").files[0]);
+    data.append("namespace", $('#chartNamespace').val());
 
     var labels = $('#chartLabels').val();
     var append = "";
@@ -93,15 +93,46 @@ $("#updateRelease").click(function() {
   var name = $('#chartName').val()
       data.append("name", name);
       data.append("chartTar", document.getElementById("chartLoc").files[0]);
-      data.append("namespace", $('chartNamespace').val());
+      data.append("namespace", $('#chartNamespace').val());
+
+    var labels = $('#chartLabels').val();
+    var append = "";
+    if (labels != "") {
+      append = "?labels="+labels;
+    }
+
+    var updateUrl = 'http://172.16.7.101:30900/v0/releases/'+name+append;
+    console.log("updating release: " + updateUrl)
 
   jQuery.ajax({
-      url: 'http://172.16.7.101:30900/v0/releases/'+name,
+      url: updateUrl,
       data: data,
       cache: false,
       contentType: false,
       processData: false,
       method: 'PUT',
       type: 'PUT'
+  });
+});
+
+$("#deleteRelease").click(function() {
+  var name = $('#delInput').val()
+
+  var labels = $('#delChartLabels').val();
+  var append = "";
+  if (labels != "") {
+    append = "?labels="+labels;
+  }
+
+  var deleteUrl = 'http://172.16.7.101:30900/v0/releases/'+name+append
+  console.log("deleting release: " + deleteUrl)
+
+  jQuery.ajax({
+      url: deleteUrl,
+      cache: false,
+      contentType: false,
+      processData: false,
+      method: 'DELETE',
+      type: 'DELETE'
   });
 });
