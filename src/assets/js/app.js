@@ -56,24 +56,38 @@ function updateClusterTable()  {
     })
 }
 
+
 function updateReleasesTable() {
+  var dictionary = {};
   $.get("http://172.16.7.101:30900/v0/releases",
     function(data) {
       data.forEach(function(r) {
-        if($("#" + r.Name + r.OnCluster ).length == 0) {
-        var newrow = '<tr class="releaseRow" id="' + r.Name + r.OnCluster + '"><td>' + r.Name + '</td><td id="' + r.Name + r.OnCluster + '-version">' + r.Version + '</td><td id="' + r.Name + r.OnCluster + '-chartName">'  + r.Chart.Metadata.Name + '</td><td id="' + r.Name + r.OnCluster + '-chartVersion">' + r.Chart.Metadata.Version + '</td><td>' + r.OnCluster +  '</td></tr>'
+
+        var rID = r.Name + r.OnCluster;
+        dictionary[rID] = rID;
+
+        if($("#" + rID).length == 0) {
+        var newrow = '<tr class="releaseRow" id="' + rID + '"><td>' + r.Name + '</td><td id="' + rID + '-version">' + r.Version + '</td><td id="' + rID + '-chartName">'  + r.Chart.Metadata.Name + '</td><td id="' + rID + '-chartVersion">' + r.Chart.Metadata.Version + '</td><td>' + r.OnCluster +  '</td></tr>'
         $('#releaseTable tr:last').after(newrow);
     } else {
-      var releaseV = $('#' + r.Name + r.OnCluster + "-version")
+      var releaseV = $('#' + rID + "-version")
       releaseV.text(r.Version)
 
-      var chartName = $('#' + r.Name + r.OnCluster + "-chartName")
+      var chartName = $('#' + rID + "-chartName")
       chartName.text(r.Chart.Metadata.Name)
-      
-      var chartV = $('#' + r.Name + r.OnCluster + "-chartVersion")
+
+      var chartV = $('#' + rID + "-chartVersion")
       chartV.text(r.Chart.Metadata.Version)
-      }
-        });
+        }
+      });
+      // follow up by pruning the releases table with releases
+      $('.releaseRow').each(function() {
+        var id =  $(this).attr('id');
+        if (!(id in dictionary)) {
+          console.log("deleting #" + id)
+          $('#' + id).remove()
+        }
+      });
     })
 }
 
