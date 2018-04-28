@@ -29,7 +29,7 @@ function loadConfig() {
 
 // Build the "dist" folder by running all of the below tasks
 gulp.task('build',
- gulp.series(clean, gulp.parallel(pages, sass, javascript, images, copy), styleGuide));
+ gulp.series(clean, gulp.parallel(pages, sass, envstuff, javascript, images, copy), styleGuide));
 
 // Build the site, run the server, and watch for file changes
 gulp.task('default',
@@ -39,6 +39,11 @@ gulp.task('default',
 // This happens every time a build starts
 function clean(done) {
   rimraf(PATHS.dist, done);
+}
+
+function envstuff() {
+  return gulp.src('./env.json')
+          .pipe(gulp.dest(PATHS.dist + '/'));
 }
 
 // Copy files out of the assets folder
@@ -96,6 +101,9 @@ function sass() {
 }
 
 let webpackConfig = {
+  node: {
+    fs: 'empty'
+  },
   module: {
     rules: [
       {

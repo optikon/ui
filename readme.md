@@ -1,70 +1,45 @@
-# ZURB Template
+# optikon-ui
 
-[![devDependency Status](https://david-dm.org/zurb/foundation-zurb-template/dev-status.svg)](https://david-dm.org/zurb/foundation-zurb-template#info=devDependencies)
+The Optikon UI is based on [Foundation for Sites](https://foundation.zurb.com/sites.html), and provides a user interface
+for the Optikon API.
 
-**Please open all issues with this template on the main [Foundation for Sites](https://github.com/zurb/foundation-sites/issues) repo.**
 
-This is the official ZURB Template for use with [Foundation for Sites](http://foundation.zurb.com/sites). We use this template at ZURB to deliver static code to our clients. It has a Gulp-powered build system with these features:
 
-- Handlebars HTML templates with Panini
-- Sass compilation and prefixing
-- JavaScript module bundling with webpack
-- Built-in BrowserSync server
-- For production builds:
-  - CSS compression
-  - JavaScript compression
-  - Image compression
+## Run in Docker
 
-## Installation
+**Prerequisites**: [Docker](https://docs.docker.com/install/)
 
-To use this template, your computer needs:
+1. Procure a [Google Maps API token](https://developers.google.com/maps/documentation/javascript/get-api-key). (Optional - if not provided, you will be unable to see the edge cluster Map View in the UI).
 
-- [NodeJS](https://nodejs.org/en/) (0.12 or greater)
-- [Git](https://git-scm.com/)
+2. Run the Optikon API -- [instructions](https://github.com/optikon/optikon-api).  
 
-This template can be installed with the Foundation CLI, or downloaded and set up manually.
-
-### Using the CLI
-
-Install the Foundation CLI with this command:
-
-```bash
-npm install foundation-cli --global
-```
-
-Use this command to set up a blank Foundation for Sites project with this template:
-
-```bash
-foundation new --framework sites --template zurb
-```
-
-The CLI will prompt you to give your project a name. The template will be downloaded into a folder with this name.
-
-Now `cd` to your project name and to start your project run 
-
-```bash
-foundation watch
-```
-
-### Manual Setup
-
-To manually set up the template, first download it with Git:
-
-```bash
-git clone https://github.com/zurb/foundation-zurb-template projectname
-```
-
-Then open the folder in your command line, and install the needed dependencies:
-
-```bash
-cd projectname
-npm install
-```
-
-Finally, run `npm start` to run Gulp. Your finished site will be created in a folder called `dist`, viewable at this URL:
+3. Run the UI container:
 
 ```
-http://localhost:8000
+docker run -d --name optikon-ui -p 8000:8000 intelligentedgeadmin/optikon-ui:0.0.2 <optikon-api-url> <your-google-maps-key>`
 ```
 
-To create compressed, production-ready assets, run `npm run build`.
+4. Navigate to `localhost:8000` in a browser window, and you should see the UI with the "clusters" area on the left populated:
+
+![screenshot](https://github.com/optikon/optikon-ui/tree/master/docs/screenshot.png)
+
+
+## Run from source
+
+**Prerequisites**: [Node.js](https://www.npmjs.com/get-npm)
+
+To run from source, complete steps 1-2 above (google maps API token, run the optikon API), then:
+
+1. clone this repo
+
+2. Create a file, `env.json` in the UI repo root, as follows, populating the values with the IP/PORT of the Optikon API, and your Google Maps API token:
+
+```
+{
+	"OPTIKON_API_URL": "http://<optikon-api-ip>:<port>",
+	"GOOGLE_MAP_KEY": "<your-api-key>"
+}
+```
+
+3. `npm install` from the repo root
+4. `npm run start`. This should open the UI in a browser window at `localhost:8000`

@@ -9,13 +9,18 @@
       width: 100%;
     }
   </style>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script>
-    // TODO - move map load JS into its own file
-    var map;
+  var OPTIKON_API_URL;
 
-    function initMap() {
-      $.get("http://172.16.7.101:30900/v0/clusters",
+  function createMap() {
+    $.getJSON( "env.json", function( data ) {
+          OPTIKON_API_URL = data["OPTIKON_API_URL"];
+      }).then(buildMap);
+    }
+
+
+  function buildMap() {
+      $.get(OPTIKON_API_URL + "/v0/clusters",
         function(data) {
           var cent = {
             lat: parseFloat(data[0].metadata.annotations.Lat), //clusters must have Lat and Long metadata (string)
@@ -44,9 +49,6 @@
           });
         });
     }
-  </script>
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD9tXJhiapjIGHC2WREBeRHHDe7rXJsyG4
-&callback=initMap">
   </script>
 </head>
 <body>
@@ -152,7 +154,8 @@
             <form>
               <div class="grid-x grid-margin-x">
                 <div class="large-12 cell">
-                  <input type="text" id="delInput" placeholder="release name to delete" />
+                  <p>Release name to delete:</p>
+                  <input type="text" id="delInput" placeholder="my-awesome-release" />
                   <p>Cluster label selectors:</p>
                   <input type="text"  id="delChartLabels" placeholder="Planet=Jupiter" />
                   <div class="button-group">

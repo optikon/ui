@@ -7,28 +7,52 @@ import Foundation from 'foundation-sites';
 //                           Init
 // ------------------------------------------------------------------------------------------
 
+var map;
+
+var GOOGLE_MAP_KEY;
+var OPTIKON_API_URL;
+getVars();
+
 window.$ = $;
-window.onload = init;
 $(document).foundation();
+window.onload = init;
 setInterval(updateUI, 500); // update every 500 ms
 
 function init() {
-  populateTables()
+  initMap();
+  populateTables();
 }
 
 //  periodically update cluster + charts without having to refresh the page
-// TODO - also update map periodically
 function updateUI() {
-  updateClusterTable()
-  updateReleasesTable()
+  populateTables()
 }
 
+
+function getVars() {
+  $.getJSON( "env.json", function( data ) {
+        GOOGLE_MAP_KEY = data["GOOGLE_MAP_KEY"];
+        OPTIKON_API_URL = data["OPTIKON_API_URL"];
+});
+}
+
+
+// ------------------------------------------------------------------------------------------
+//                          Google maps API -- cluster map
+// ------------------------------------------------------------------------------------------
+
+function initMap() {
+  var tag = document.createElement('script');
+  tag.src =   "https://maps.googleapis.com/maps/api/js?key=" + GOOGLE_MAP_KEY + "&callback=createMap";
+  tag.defer = true;
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+}
 
 // ------------------------------------------------------------------------------------------
 //                          Tables
 // ------------------------------------------------------------------------------------------
 
-// Do an initial GEt clusters
 function populateTables() {
   updateClusterTable()
   updateReleasesTable()
@@ -39,7 +63,7 @@ function populateTables() {
 // inline updates on refresh
 
 function updateClusterTable()  {
-  $.get("http://172.16.7.101:30900/v0/clusters",
+  $.get(OPTIKON_API_URL + "/v0/clusters",
     function(data) {
       data.forEach(function(c) {
         // if new clusters, make a new row
@@ -59,7 +83,7 @@ function updateClusterTable()  {
 
 function updateReleasesTable() {
   var dictionary = {};
-  $.get("http://172.16.7.101:30900/v0/releases",
+  $.get(OPTIKON_API_URL + "/v0/releases",
     function(data) {
       data.forEach(function(r) {
 
@@ -108,10 +132,10 @@ $("#postRelease").click(function() {
       append = "?labels="+labels;
     }
 
-    console.log('http://172.16.7.101:30900/v0/releases'+append)
+    console.log(OPTIKON_API_URL + '/v0/releases'+append)
 
   jQuery.ajax({
-      url: 'http://172.16.7.101:30900/v0/releases'+append,
+      url: OPTIKON_API_URL + '/v0/releases'+append,
       data: data,
       cache: false,
       contentType: false,
@@ -135,7 +159,7 @@ $("#updateRelease").click(function() {
       append = "?labels="+labels;
     }
 
-    var updateUrl = 'http://172.16.7.101:30900/v0/releases/'+name+append;
+    var updateUrl = OPTIKON_API_URL + '/v0/releases/'+name+append;
     console.log("updating release: " + updateUrl)
 
   jQuery.ajax({
@@ -158,7 +182,7 @@ $("#deleteRelease").click(function() {
     append = "?labels="+labels;
   }
 
-  var deleteUrl = 'http://172.16.7.101:30900/v0/releases/'+name+append
+  var deleteUrl = OPTIKON_API_URL + '/v0/releases/'+name+append
   console.log("deleting release: " + deleteUrl)
 
   jQuery.ajax({
