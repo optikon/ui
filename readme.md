@@ -21,7 +21,7 @@ docker run -d --name optikon-ui -p 8000:8000 intelligentedgeadmin/optikon-ui:0.0
 
 4. Navigate to `localhost:8000` in a browser window, and you should see the UI with the "clusters" area on the left populated:
 
-![screenshot](https://github.com/optikon/optikon-ui/tree/master/docs/screenshot.png)
+![screenshot](https://github.com/optikon/ui/blob/master/docs/screenshot.png)
 
 
 ## Run from source
