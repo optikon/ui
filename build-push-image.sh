@@ -2,8 +2,8 @@
 SHORT_SHA=`echo ${TRAVIS_COMMIT::7}`
 REPO=optikon/ui
 
-make container TAG=$SHORT_SHA
 echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
+make container TAG=$SHORT_SHA
 
 # If the tag is undefined
 if [ ! -z $TRAVIS_TAG ]; then
