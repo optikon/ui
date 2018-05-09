@@ -1,9 +1,9 @@
 # optikon-ui
 
+[![Build Status](https://travis-ci.org/optikon/ui.svg?branch=master)](https://travis-ci.org/optikon/ui)
+
 The Optikon UI is based on [Foundation for Sites](https://foundation.zurb.com/sites.html), and provides a user interface
 for the Optikon API.
-
-
 
 ## Run in Docker
 
