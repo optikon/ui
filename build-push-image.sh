@@ -6,7 +6,8 @@ echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
 make container TAG=$SHORT_SHA
 
 if [ $? != 0 ]; then
-  exit $?
+  echo "IN EXIT"
+  exit 1
 fi
 
 # If the tag is undefined
